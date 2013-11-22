@@ -3,9 +3,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-Edit* empiler(Edit *tetepile, int pos) {
+Edit* empiler(Edit *tetepile, char data, int pos) {
 
     Edit *nouveau = malloc(sizeof(Edit));
+    nouveau->data = data;
     nouveau->pos = pos;
     nouveau->next = tetepile;
 
@@ -13,9 +14,10 @@ Edit* empiler(Edit *tetepile, int pos) {
 
 }
 
-Edit* empilerFin(Edit *tetepile, int pos) {
+Edit* empilerFin(Edit *tetepile, char data, int pos) {
 
     Edit *nouveau = malloc(sizeof(Edit));
+    nouveau->data = data;
     nouveau->pos = pos;
     nouveau->next = NULL;
 
@@ -116,8 +118,8 @@ void print_list(Edit* tetepile) {
 
     while (tetepile != NULL) {
 
-        printf("%c ", tetepile->pos);
+        printf("%d: %c ", tetepile->pos, tetepile->data);
         tetepile = tetepile->next;
     }
-
+    putchar('\n');
 }

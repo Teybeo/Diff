@@ -8,12 +8,23 @@
 
 int main(int argc, char** argv)
 {
+
+#ifdef ARGV_INPUT
     if (argc < 3) {
         puts("Nombre de parametres insuffisants");
         return 1;
     }
     char* chaine_a = argv[1];
     char* chaine_b = argv[2];
+#else
+    char chaine_a[256] = {};
+    char chaine_b[256] = {};
+    fgets(chaine_a, 256, stdin);
+    fgets(chaine_b, 256, stdin);
+    chaine_a[strlen(chaine_a)-1] = '\0';
+    chaine_b[strlen(chaine_b)-1] = '\0';
+#endif
+
     int size_a = strlen(chaine_a);
     int size_b = strlen(chaine_b);
 
@@ -32,22 +43,43 @@ int main(int argc, char** argv)
 
     int size_lcs = strlen(lcs);
 
-    int i = 0, j;
-    for (j = 0 ; j < size_lcs ; j++ )
+    // Rappel: Si un caractère est dans le lcs, alors il est obligatoirement présent dans la chaine de départ ET d'arrivée
+    /*  Pour chaque caractère du lcs (le noyau dur) et dans l'ordre
+            On cherche ce caractère dans la chaine a en partant de la dernière position où un caractère a été trouvé (0 au début)
+                Dès qu'on trouve, on arrête de chercher ce caractère
+                Pour chaque position où ne trouve pas, on marque le caractère de a à cette position comme ayant été supprimé
+            Même chose dans b sauf qu'on marque les caractères des positions non-trouvées comme des additions
+    */
+    int i, j = 0, k = 0;
+    for (i = 0 ; i < size_lcs ; i++ )
     {
-        for ( ; i < size_a ; i++ )
+        for ( ; j < size_a ; j++ )
         {
-            if (chaine_a[i] != lcs[j])
-                deletion = empiler(deletion, chaine_a[i]);
-            else
+            if (chaine_a[j] == lcs[i])
             {
-                i++;
+                j++;
                 break;
             }
+            else
+                deletion = empilerFin(deletion, chaine_a[j], j);
+        }
+
+        for ( ; k < size_b ; k++ )
+        {
+            if (chaine_b[k] == lcs[i])
+            {
+                k++;
+                break;
+            }
+            else
+                addition = empilerFin(addition, chaine_b[k], k);
         }
     }
 
+    puts("Suppression:");
     print_list(deletion);
+    puts("Addition:");
+    print_list(addition);
 
     return 0;
 }

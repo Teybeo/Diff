@@ -8,7 +8,7 @@
     Alloue une matrice permettant ensuite de trouver le LCS de chaine_a et chaine_b
     Ne contient pas d'en-têtes
 */
-char** build_lcs_matrix(char* chaine_a, char* chaine_b, int size_a, int size_b) {
+char** build_lcs_matrix(char** chaine_a, char** chaine_b, int size_a, int size_b) {
 
     // +1 pour le caractère vide
     int size_x = size_a + 1; // Nombre de colonnes
@@ -38,7 +38,10 @@ char** build_lcs_matrix(char* chaine_a, char* chaine_b, int size_a, int size_b) 
     {
         for (x = 0 ; x < size_a; x++ )
         {
-            if (chaine_a[x] == chaine_b[y])
+            puts(chaine_a[x]);
+            puts(chaine_b[y]);
+
+            if (strcmp(chaine_a[x], chaine_b[y]) == 0)
                 matrix[y+1][x+1] = 1 + matrix[y][x];
             else
                 matrix[y+1][x+1] = max(matrix[y][x+1], matrix[y+1][x]);
@@ -51,14 +54,14 @@ char** build_lcs_matrix(char* chaine_a, char* chaine_b, int size_a, int size_b) 
 /*
     Cette fonction extrait la (une) lcs des chaines a et b à partir de la matrice
 */
-void extract_lcs(char** matrix, char* a, char* b, int x, int y, char* lcs)
+void extract_lcs(char** matrix, char** a, char** b, int x, int y, char** lcs)
 {
     static int i = 0;
 
     if (x == 0 || y == 0)
         return;
 
-    if (a[x - 1] == b[y - 1])
+    if (strcmp(a[x - 1], b[y - 1]) == 0)
     {
         extract_lcs(matrix, a, b, x - 1, y - 1, lcs);
         lcs[i] = a[x - 1];
@@ -73,19 +76,19 @@ void extract_lcs(char** matrix, char* a, char* b, int x, int y, char* lcs)
 /*
     Affiche la matrice en rajoutant les caractères des chaine a et b en en-têtes des lignes et colonnes
 */
-void display_lcs_matrix(char** matrix, int size_a, int size_b, char* chaine_a, char* chaine_b) {
+void display_lcs_matrix(char** matrix, int size_a, int size_b, char** chaine_a, char** chaine_b) {
 
     int i, j;
 
     printf("    ");
     for (j = 0 ; j < size_a; j++ )
-        printf("%c ", chaine_a[j]);
+        printf("%p ", chaine_a[j]);
 
    putchar('\n');
 
     for (i = 0 ; i < size_b + 1 ; i++ )
     {
-        printf("%c ", (i == 0) ? ' ' : chaine_b[i - 1]);
+        printf("%p ", (i == 0) ? ' ' : chaine_b[i - 1]);
 
         for (j = 0 ; j < size_a + 1; j++ )
             printf("%c ", matrix[i][j]);

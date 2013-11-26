@@ -4,14 +4,14 @@
 typedef struct _Edit {
 
     int pos;
-    char data;
+    char* data;
     struct _Edit* next;
 
 } Edit;
 
 void print_list(Edit* tetepile);
-Edit* empiler(Edit *tetepile, char data, int pos);
-Edit* empilerFin(Edit *tetepile, char data, int pos);
+Edit* empiler(Edit *tetepile, char* data, int pos);
+Edit* empilerFin(Edit *tetepile, char* data, int pos);
 Edit* depiler(Edit* tetepile);
 void* liberePile(Edit* tetepile);
 int getElemNumber(Edit* tetepile);

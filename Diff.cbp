@@ -12,7 +12,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="human ham" />
+				<Option parameters="file1.txt file2.txt" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -42,6 +42,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="lcs.h" />
+		<Unit filename="line_length_list.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="line_length_list.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

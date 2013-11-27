@@ -94,8 +94,14 @@ int main(int argc, char** argv)
         }
     }
 
-    if (i <= size_a)
-        deletion = empilerFin(deletion, file_a[j]);
+    if (size_lcs < size_a) {
+        for ( ; j < size_a; j++)
+            deletion = empilerFin(deletion, file_a[j], j);
+    }
+    if (size_lcs < size_b) {
+        for ( ; k < size_b; k++)
+            addition = empilerFin(addition, file_b[k], k);
+    }
 
 
     puts("Suppression:");

@@ -62,46 +62,33 @@ int main(int argc, char** argv)
     size_lcs--;
 
     // Rappel: Si un caractère est dans le lcs, alors il est obligatoirement présent dans la chaine de départ ET d'arrivée
-    /*  Pour chaque caractère du lcs (le noyau dur) et dans l'ordre
-            On cherche ce caractère dans la chaine a en partant de la dernière position où un caractère a été trouvé (0 au début)
-                Dès qu'on trouve, on arrête de chercher ce caractère
-                Pour chaque position où ne trouve pas, on marque le caractère de a à cette position comme ayant été supprimé
-            Même chose dans b sauf qu'on marque les caractères des positions non-trouvées comme des additions
+    /*  Pour chaque caractère de la chaine a et dans l'ordre
+            Si on ne trouve pas ce caractère ou qu'il n'y a plus de caracs dans le lcs
+                On marque le caractère de a à cette position comme ayant été supprimé
+            Sinon, c'est qu'on a trouvé le carac de a dans le lcs, donc il n'a pas été supprimé, on passe au caractère suivant
+        Même chose pour b sauf qu'on marque les caractères des positions non-trouvées comme des additions
     */
-    int i, j = 0, k = 0;
-    for (i = 0 ; i < size_lcs ; i++ )
+    int i, j;
+
+    for (i = j = 0 ; i < size_a ; i++ )
     {
-        for ( ; j < size_a ; j++ )
+        if (j >= size_lcs || strcmp(file_a[i], lcs[j]) != 0)
         {
-            if (strcmp(file_a[j], lcs[i]) == 0)
-            {
-                j++;
-                break;
-            }
-            else
-                deletion = empilerFin(deletion, file_a[j], j);
+            deletion = empilerFin(deletion, file_a[i], i);
         }
-
-        for ( ; k < size_b ; k++ )
+        else
+            j++;
+    }
+    for (i = j = 0; i < size_b ; i++ )
+    {
+        if (j < size_lcs && strcmp(file_b[i], lcs[j]) == 0)
         {
-            if (strcmp(file_b[k], lcs[i]) == 0)
-            {
-                k++;
-                break;
-            }
-            else
-                addition = empilerFin(addition, file_b[k], k);
+            j++;
         }
+        else
+            addition = empilerFin(addition, file_b[i], i);
     }
 
-    if (size_lcs < size_a) {
-        for ( ; j < size_a; j++)
-            deletion = empilerFin(deletion, file_a[j], j);
-    }
-    if (size_lcs < size_b) {
-        for ( ; k < size_b; k++)
-            addition = empilerFin(addition, file_b[k], k);
-    }
 
 
     puts("Suppression:");

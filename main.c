@@ -74,7 +74,7 @@ int main(int argc, char** argv)
     {
         if (j >= size_lcs || strcmp(file_a[i], lcs[j]) != 0)
         {
-            deletion = empilerFin(deletion, file_a[i], i);
+            deletion = empilerFin(deletion, file_a[i], i + 1);
         }
         else
             j++;
@@ -86,10 +86,8 @@ int main(int argc, char** argv)
             j++;
         }
         else
-            addition = empilerFin(addition, file_b[i], i);
+            addition = empilerFin(addition, file_b[i], i + 1);
     }
-
-
 
     puts("Suppression:");
     print_list(deletion);

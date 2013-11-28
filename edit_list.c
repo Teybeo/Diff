@@ -118,7 +118,7 @@ void print_list(Edit* tetepile) {
 
     while (tetepile != NULL) {
 
-        printf("%d: %s ", tetepile->pos, tetepile->data);
+        printf("%d: %s", tetepile->pos, tetepile->data);
         tetepile = tetepile->next;
     }
     putchar('\n');

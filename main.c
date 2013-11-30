@@ -76,22 +76,52 @@ void print_lines(char** file, int start, int count, char symbol) {
         printf("%c %s", symbol, file[start + i]);
 }
 
+void print_range(int start, int count) {
 
-#define print_range(start, count)                  \
-    if (count == 1)                                \
-        printf("%d", start+1);                     \
-    else                                           \
-        printf("%d,%d", start + 1, start + count); \
+    if (count == 0)
+        printf("%d", start); // Ligne après laquelle une modif a été faite
+    else if (count == 1)
+        printf("%d", start + 1); // Numéro de ligne réel
+    else
+        printf("%d,%d", start + 1, start + count);
+}
 
-    // Rappel: Si un caractère est dans le lcs, alors il est obligatoirement présent dans la chaine de départ ET d'arrivée
-    /*  Pour chaque élément du lcs et dans l'ordre
-            Si on ne trouve pas cet élément lcs dans B mais en le trouvant dans A, c'est que des lignes ont été ajoutées avant dans B
-                On indique toutes ces lignes comme des ajouts et on les passe
-            Si on ne trouve pas cet élément lcs dans A mais en le trouvant dans B, c'est que des lignes ont été supprimées dans B
-                On indique toutes ces lignes comme des suppressions et on les passe
-            Si on ne trouve cet élément lcs ni dans A ni dans B, c'est que ces lignes ont été changées de A en celles de B
-                On indique toutes ces lignes comme changées et on les passe
-    */
+#define ADDITION 0
+#define DELETION 1
+#define MODIFICATION 2
+
+void print_edit(char** file_a, char** file_b, int idx_a, int idx_b, int nb_diff_a, int nb_diff_b, int edit_type) {
+
+    char edit_code[] = {'a', 'd', 'c'};
+
+    print_range(idx_a, nb_diff_a);
+    putchar(edit_code[edit_type]);
+    print_range(idx_b, nb_diff_b);
+
+    putchar('\n');
+
+    if (edit_type == ADDITION)
+        print_lines(file_b, idx_b, nb_diff_b, '>');
+    else if (edit_type == DELETION)
+        print_lines(file_a, idx_a, nb_diff_a, '<');
+    else if (edit_type == MODIFICATION)
+    {
+        print_lines(file_a, idx_a, nb_diff_a, '<');
+        puts("---");
+        print_lines(file_b, idx_b, nb_diff_b, '>');
+    }
+
+}
+
+// Rappel: Si un caractère est dans le lcs, alors il est obligatoirement présent dans la chaine de départ ET d'arrivée
+/*  Pour chaque élément du lcs et dans l'ordre
+        Si on ne trouve pas cet élément lcs dans B mais en le trouvant dans A, c'est que des lignes ont été ajoutées avant dans B
+            On indique toutes ces lignes comme des ajouts et on les passe
+        Si on ne trouve pas cet élément lcs dans A mais en le trouvant dans B, c'est que des lignes ont été supprimées dans B
+            On indique toutes ces lignes comme des suppressions et on les passe
+        Si on ne trouve cet élément lcs ni dans A ni dans B, c'est que ces lignes ont été changées de A en celles de B
+            On indique toutes ces lignes comme changées et on les passe
+*/
 void print_diff(char** file_a, int size_a, char** file_b, int size_b, char** lcs, int size_lcs) {
 
     bool found_in_a = true;
@@ -106,55 +136,66 @@ void print_diff(char** file_a, int size_a, char** file_b, int size_b, char** lcs
         nb_lines_different_b = 0;
 
         found_in_a = !strcmp(lcs[i], file_a[idx_a]);
-
         found_in_b = !strcmp(lcs[i], file_b[idx_b]);
 
-        // Trouvé dans A mais pas au meme endroit dans B => additions dans B
+        // Ligne lcs trouvée en idx_a dans A mais pas en idx_b dans B
+        // => des lignes sont présentes dans B devant la ligne lcs, (ajoutées dans B)
         if (found_in_a && !found_in_b)
         {
             nb_lines_different_b = get_nb_lines_until_found(file_b, lcs[i], idx_b, size_b);
 
-            printf("%d", idx_a);
-            putchar('a');
-            print_range(idx_b, nb_lines_different_b);
-
-            putchar('\n');
-
-            print_lines(file_b, idx_b, nb_lines_different_b, '>');
+            print_edit(file_a, file_b, idx_a, idx_b, 0, nb_lines_different_b, ADDITION);
         }
-        // Trouvé dans B mais pas au meme endroit dans A => suppressions dans A
+        // Ligne lcs trouvée en idx_b dans B mais pas en idx_a dans A
+        // => des lignes sont présentes dans A devant la ligne lcs, (supprimées dans B)
         if (!found_in_a && found_in_b)
         {
             nb_lines_different_a = get_nb_lines_until_found(file_a, lcs[i], idx_a, size_a);
 
-            print_range(idx_a, nb_lines_different_a);
-            putchar('d');
-            printf("%d", idx_b);
-
-            putchar('\n');
-
-            print_lines(file_a, idx_a, nb_lines_different_a, '<');
+            print_edit(file_a, file_b, idx_a, idx_b, nb_lines_different_a, 0, DELETION);
         }
+        // Ligne lcs trouvée ni en idx_a dans A ni en idx_b dans B
+        // => des lignes sont présentes dans A et dans B devant la ligne lcs, (changées de A à B)
         if (!found_in_a && !found_in_b)
         {
             nb_lines_different_a = get_nb_lines_until_found(file_a, lcs[i], idx_a, size_a);
             nb_lines_different_b = get_nb_lines_until_found(file_b, lcs[i], idx_b, size_b);
 
-            print_range(idx_a, nb_lines_different_a);
-            putchar('c');
-            print_range(idx_b, nb_lines_different_b);
-
-            putchar('\n');
-
-            print_lines(file_a, idx_a, nb_lines_different_a, '<');
-            puts("-------");
-            print_lines(file_b, idx_b, nb_lines_different_b, '>');
+            print_edit(file_a, file_b, idx_a, idx_b, nb_lines_different_a, nb_lines_different_b, MODIFICATION);
         }
 
+        // On passe les lignes différentes qu'on a trouvées
         idx_b += nb_lines_different_b;
         idx_a += nb_lines_different_a;
+        // Puis on passe la ligne lcs qu'on cherchait
         idx_a++;
         idx_b++;
+    }
+
+    /* La boucle précédente s'arrête quand la dernière ligne lcs a été trouvée
+    Ici on traite donc les éventuelles modifications faites en fin de fichier, après la dèrnire ligne lcs*/
+
+    // Il en reste dans A et dans B => Modifications
+    if (idx_a < size_a && idx_b < size_b)
+    {
+        nb_lines_different_a = size_a - idx_a;
+        nb_lines_different_b = size_b - idx_b;
+
+        print_edit(file_a, file_b, idx_a, idx_b, nb_lines_different_a, nb_lines_different_b, MODIFICATION);
+    }
+    // Il en reste dans A mais pas dans B => Suppressions
+    else if (idx_a < size_a && idx_b == size_b)
+    {
+        nb_lines_different_a = size_a - idx_a;
+
+        print_edit(file_a, file_b, idx_a, idx_b, nb_lines_different_a, 0, DELETION);
+    }
+    // Il en reste dans B mais pas dans A => Additions
+    else if (idx_a == size_a && idx_b < size_b)
+    {
+        print_edit(file_a, file_b, idx_a, idx_b, 0, nb_lines_different_b, ADDITION);
+
+        nb_lines_different_b = size_b - idx_b;
     }
 
 }

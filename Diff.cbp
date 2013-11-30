@@ -23,6 +23,7 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="file1.txt file2.txt" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>

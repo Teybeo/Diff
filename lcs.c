@@ -38,14 +38,11 @@ char** build_lcs_matrix(char** chaine_a, char** chaine_b, int size_a, int size_b
     {
         for (x = 0 ; x < size_a; x++ )
         {
-            puts(chaine_a[x]);
-            puts(chaine_b[y]);
-
             if (strcmp(chaine_a[x], chaine_b[y]) == 0)
                 matrix[y+1][x+1] = 1 + matrix[y][x];
             else
                 matrix[y+1][x+1] = max(matrix[y][x+1], matrix[y+1][x]);
-            display_lcs_matrix(matrix, size_a, size_b, chaine_a, chaine_b);
+//            display_lcs_matrix(matrix, size_a, size_b, chaine_a, chaine_b);
         }
     }
 
@@ -88,7 +85,7 @@ void display_lcs_matrix(char** matrix, int size_a, int size_b, char** chaine_a, 
 
     for (i = 0 ; i < size_b + 1 ; i++ )
     {
-        printf("%p ", (i == 0) ? ' ' : chaine_b[i - 1]);
+        (i == 0) ? putchar(' ') : printf("%p ", chaine_b[i - 1]);
 
         for (j = 0 ; j < size_a + 1; j++ )
             printf("%c ", matrix[i][j]);

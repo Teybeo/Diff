@@ -1,0 +1,35 @@
+# depslib dependency file v1.0
+1386869721 source:c:\users\guillaume\documents\github\diff\lcs.c
+	"lcs.h"
+	"_string.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+
+1385974396 c:\users\guillaume\documents\github\diff\lcs.h
+
+1385974396 source:c:\users\guillaume\documents\github\diff\line_length_list.c
+	"line_length_list.h"
+	<stdlib.h>
+	<stdio.h>
+
+1385974396 c:\users\guillaume\documents\github\diff\line_length_list.h
+
+1386869002 source:c:\users\guillaume\documents\github\diff\main.c
+	"lcs.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	"edit_list.h"
+	"line_length_list.h"
+
+1385974396 c:\users\guillaume\documents\github\diff\edit_list.h
+
+1385974396 source:c:\users\guillaume\documents\github\diff\edit_list.c
+	"edit_list.h"
+	<stdlib.h>
+	<stdio.h>
+
+1386869727 c:\users\guillaume\documents\github\diff\_string.h
+

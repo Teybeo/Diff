@@ -7,9 +7,9 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/Diff" prefix_auto="1" extension_auto="1" />
+				<Option output="bin\Debug\Diff" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="bin" />
-				<Option object_output="obj/Debug/" />
+				<Option object_output="obj\Debug\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option parameters="file1.txt file2.txt" />
@@ -18,9 +18,9 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/Diff" prefix_auto="1" extension_auto="1" />
+				<Option output="bin\Release\Diff" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="bin" />
-				<Option object_output="obj/Release/" />
+				<Option object_output="obj\Release\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option parameters="file1.txt file2.txt" />
@@ -35,6 +35,13 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="_string.c">
+			<Option compilerVar="CC" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="_string.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="edit_list.c">
 			<Option compilerVar="CC" />
 		</Unit>

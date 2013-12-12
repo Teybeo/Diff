@@ -57,6 +57,7 @@ int main(int argc, char** argv)
     size_lcs--;
 
     print_diff(file_a, size_a, file_b, size_b, lcs, size_lcs);
+    //is_different(file_a, size_a, file_b, size_b);
 
     return 0;
 }
@@ -197,6 +198,32 @@ void print_diff(char** file_a, int size_a, char** file_b, int size_b, char** lcs
 
         nb_lines_different_b = size_b - idx_b;
     }
+
+}
+
+/*
+ Commande -q
+ Dit si les fichiers sont différents ou non
+*/
+void is_different(char** file_a, int size_a, char** file_b, int size_b){
+
+    bool found = true;
+    int i;
+
+    if(size_a == size_b){
+        for (i = 0 ; i < size_a ; i++ ){
+
+            found = !strcmp(file_b[i], file_a[i]);
+            if (!(found))
+                printf("\nLes fichiers sont differents");
+
+        }
+    }
+    else
+        printf("Les fichiers sont differents\n");
+}
+
+void ignore_casse(char** file_a, int size_a, char** file_b, int size_b, char** lcs, int size_lcs){
 
 }
 

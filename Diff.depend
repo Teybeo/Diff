@@ -1,12 +1,12 @@
 # depslib dependency file v1.0
-1386869721 source:c:\users\guillaume\documents\github\diff\lcs.c
+1386876181 source:c:\users\guillaume\documents\github\diff\lcs.c
 	"lcs.h"
-	"_string.h"
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 
-1385974396 c:\users\guillaume\documents\github\diff\lcs.h
+1386870897 c:\users\guillaume\documents\github\diff\lcs.h
+	"_string.h"
 
 1385974396 source:c:\users\guillaume\documents\github\diff\line_length_list.c
 	"line_length_list.h"
@@ -15,7 +15,7 @@
 
 1385974396 c:\users\guillaume\documents\github\diff\line_length_list.h
 
-1386869002 source:c:\users\guillaume\documents\github\diff\main.c
+1386878343 source:c:\users\guillaume\documents\github\diff\main.c
 	"lcs.h"
 	<stdio.h>
 	<stdlib.h>
@@ -31,5 +31,8 @@
 	<stdlib.h>
 	<stdio.h>
 
-1386869727 c:\users\guillaume\documents\github\diff\_string.h
+1386871467 c:\users\guillaume\documents\github\diff\_string.h
+
+1386871715 source:c:\users\guillaume\documents\github\diff\_string.c
+	"_string.h"
 

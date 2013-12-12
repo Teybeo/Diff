@@ -38,8 +38,7 @@ char** build_lcs_matrix(char** chaine_a, char** chaine_b, int size_a, int size_b
     {
         for (x = 0 ; x < size_a; x++ )
         {
-            //if (strcmp(chaine_a[x], chaine_b[y]) == 0)
-            if (diff_strcmp(chaine_a[x], chaine_b[y]) == 0)
+            if (strcmp(chaine_a[x], chaine_b[y]) == 0)
                 matrix[y+1][x+1] = 1 + matrix[y][x];
             else
                 matrix[y+1][x+1] = max(matrix[y][x+1], matrix[y+1][x]);

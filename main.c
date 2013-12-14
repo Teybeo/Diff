@@ -253,7 +253,6 @@ char* tab_to_spaces (char* str) //Option t
     }
 
     char* result = malloc ((str_len(str) + 1 + 3*k) * sizeof (*result));
-	
 
     for (i=0; i < str_len(str); i++)
     {

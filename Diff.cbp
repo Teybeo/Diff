@@ -35,6 +35,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="_string.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="_string.h" />
 		<Unit filename="edit_list.c">
 			<Option compilerVar="CC" />
 		</Unit>

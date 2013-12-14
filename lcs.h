@@ -1,6 +1,6 @@
 #ifndef _LCS_GUARD
 #define _LCS_GUARD
-
+#include "_string.h"
 #define max(a, b)((a) > (b) ? (a) : (b))
 
 char** build_lcs_matrix(char** chaine_a, char** chaine_b, int size_a, int size_b);

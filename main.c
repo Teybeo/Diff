@@ -15,6 +15,7 @@ char** load_file(char* filename, int* nb_lines);
 int get_number_of_lines(FILE* file);
 Line_Length* get_lines_data(char* text, int* nb);
 void print_diff(char** file_a, int size_a, char** file_b, int size_b, char** lcs, int size_lcs);
+void is_different(char** file_a, int size_a, char** file_b, int size_b);
 
 int main(int argc, char** argv)
 {
@@ -57,6 +58,9 @@ int main(int argc, char** argv)
     while (lcs[size_lcs++] != 0);
     size_lcs--;
 
+    print_diff_normal(file_a, size_a, file_b, size_b, lcs, size_lcs);
+    //is_different(file_a, size_a, file_b, size_b);
+    ignore_casse(file_a, size_a, file_b, size_b, lcs, size_lcs);
 
     return 0;
 }
@@ -156,12 +160,28 @@ Line_Length* get_lines_data(char* text, int* nb) {
 }
 
 
+/*
+    Commande - q
+    Dit si les fichiers sont diff�rents ou non
+*/
+void is_different(char** file_a, int size_a, char** file_b, int size_b)
+{
 
+    bool found = true;
+    int i;
 
+    if(size_a == size_b)
+    {
+        for (i = 0 ; i < size_a ; i++ )
+        {
+            found = !strcmp(file_b[i], file_a[i]);
+            if (!(found))
+                printf("\nLes fichiers sont differents");
+        }
+    }
 
+    else
+        printf("Les fichiers sont differents\n");
 
-
-
-
-
+}
 

@@ -143,3 +143,80 @@ void print_range(int start, int count) {
     else
         printf("%d,%d", start + 1, start + count);
 }
+
+void ignore_casse(char** file_a, int size_a, char** file_b, int size_b, char** lcs, int size_lcs){
+    bool found_in_a = true;
+    bool found_in_b = true;
+    int i, idx_a = 0, idx_b = 0;
+    int nb_lines_different_a;
+    int nb_lines_different_b;
+
+    for (i = 0 ; i < size_lcs ; i++ )
+    {
+        nb_lines_different_a = 0;
+        nb_lines_different_b = 0;
+
+        found_in_a = !strcmp(lcs[i], file_a[idx_a]);
+        found_in_b = !strcmp(lcs[i], file_b[idx_b]);
+
+        // Ligne lcs trouvée en idx_a dans A mais pas en idx_b dans B
+        // => des lignes sont présentes dans B devant la ligne lcs, (ajoutées dans B)
+        if (found_in_a && !found_in_b)
+        {
+            nb_lines_different_b = get_nb_lines_until_found(file_b, lcs[i], idx_b, size_b);
+            if(diff_strcasecmp(file_a[idx_a], file_b[idx_b]) != 0)
+                print_edit(file_a, file_b, idx_a, idx_b, 0, nb_lines_different_b, ADDITION);
+        }
+        // Ligne lcs trouvée en idx_b dans B mais pas en idx_a dans A
+        // => des lignes sont présentes dans A devant la ligne lcs, (supprimées dans B)
+        if (!found_in_a && found_in_b)
+        {
+            nb_lines_different_a = get_nb_lines_until_found(file_a, lcs[i], idx_a, size_a);
+            if(diff_strcasecmp(file_a[idx_a], file_b[idx_b]) != 0)
+                print_edit(file_a, file_b, idx_a, idx_b, nb_lines_different_a, 0, DELETION);
+        }
+        // Ligne lcs trouvée ni en idx_a dans A ni en idx_b dans B
+        // => des lignes sont présentes dans A et dans B devant la ligne lcs, (changées de A à B)
+        if (!found_in_a && !found_in_b)
+        {
+            nb_lines_different_a = get_nb_lines_until_found(file_a, lcs[i], idx_a, size_a);
+            nb_lines_different_b = get_nb_lines_until_found(file_b, lcs[i], idx_b, size_b);
+            if(diff_strcasecmp(file_a[idx_a], file_b[idx_b]) != 0)
+                print_edit(file_a, file_b, idx_a, idx_b, nb_lines_different_a, nb_lines_different_b, MODIFICATION);
+        }
+
+        // On passe les lignes différentes qu'on a trouvées
+        idx_b += nb_lines_different_b;
+        idx_a += nb_lines_different_a;
+        // Puis on passe la ligne lcs qu'on cherchait
+        idx_a++;
+        idx_b++;
+    }
+
+    /* La boucle précédente s'arrête quand la dernière ligne lcs a été trouvée
+    Ici on traite donc les éventuelles modifications faites en fin de fichier, après la dèrnire ligne lcs*/
+
+    // Il en reste dans A et dans B => Modifications
+    if (idx_a < size_a && idx_b < size_b)
+    {
+        nb_lines_different_a = size_a - idx_a;
+        nb_lines_different_b = size_b - idx_b;
+        if(diff_strcasecmp(file_a[idx_a], file_b[idx_b]) != 0)
+            print_edit(file_a, file_b, idx_a, idx_b, nb_lines_different_a, nb_lines_different_b, MODIFICATION);
+    }
+    // Il en reste dans A mais pas dans B => Suppressions
+    else if (idx_a < size_a && idx_b == size_b)
+    {
+        nb_lines_different_a = size_a - idx_a;
+        if(diff_strcasecmp(file_a[idx_a], file_b[idx_b]) != 0)
+            print_edit(file_a, file_b, idx_a, idx_b, nb_lines_different_a, 0, DELETION);
+    }
+    // Il en reste dans B mais pas dans A => Additions
+    else if (idx_a == size_a && idx_b < size_b)
+    {
+        nb_lines_different_b = size_b - idx_b;
+        if(diff_strcasecmp(file_a[idx_a], file_b[idx_b]) != 0)
+            print_edit(file_a, file_b, idx_a, idx_b, 0, nb_lines_different_b, ADDITION);
+    }
+
+}

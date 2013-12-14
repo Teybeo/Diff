@@ -54,6 +54,10 @@
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="options.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="options.h" />
 		<Unit filename="output.c">
 			<Option compilerVar="CC" />
 		</Unit>

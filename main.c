@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include "options.h"
 #include "edit_list.h"
 #include "line_length_list.h"
 
@@ -19,6 +20,7 @@ void is_different(char** file_a, int size_a, char** file_b, int size_b);
 
 int main(int argc, char** argv)
 {
+    Options* options = NULL;
 
 #ifdef ARGV_INPUT
     if (argc < 3) {
@@ -27,6 +29,9 @@ int main(int argc, char** argv)
     }
     char* path_a = argv[1];
     char* path_b = argv[2];
+
+    options = parse_options(argc, argv);
+
 #else
     char path_a[256] = {};
     char path_b[256] = {};
@@ -36,14 +41,21 @@ int main(int argc, char** argv)
     path_b[strlen(path_b)-1] = '\0';
 #endif
 
+    if (options == NULL)
+    {
+        puts("Erreur lecture des options");
+        return 0;
+    }
+
+
     int size_a = 0;
     int size_b = 0;
 
-    char** file_a = load_file(path_a, &size_a);
+    char** file_a = load_file(options->path_a, &size_a);
     if (file_a == NULL)
         return 0;
 
-    char** file_b = load_file(path_b, &size_b);
+    char** file_b = load_file(options->path_b, &size_b);
     if (file_b == NULL)
         return 0;
 
@@ -58,9 +70,15 @@ int main(int argc, char** argv)
     while (lcs[size_lcs++] != 0);
     size_lcs--;
 
-    print_diff_normal(file_a, size_a, file_b, size_b, lcs, size_lcs);
-    //is_different(file_a, size_a, file_b, size_b);
-    ignore_casse(file_a, size_a, file_b, size_b, lcs, size_lcs);
+    if (options->brief)
+        is_different(file_a, size_a, file_b, size_b);
+    else if (options->output_mode == OUTPUT_MODE_NORMAL)
+    {
+        if (options->ignore_case_content)
+            ignore_casse(file_a, size_a, file_b, size_b, lcs, size_lcs);
+        else
+            print_diff_normal(file_a, size_a, file_b, size_b, lcs, size_lcs);
+    }
 
     return 0;
 }

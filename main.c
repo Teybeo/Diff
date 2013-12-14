@@ -233,7 +233,7 @@ char* one_space (char* str) // Option b
     }
     
     result[j] = '\0'; 
-	free(str);
+    free(str);
     return result;
 }
 
@@ -272,9 +272,9 @@ char* tab_to_spaces (char* str) //Option t
         }
     }
 	 
-    result[j] = '\0';
-  
-    return result;
+  result[j] = '\0';
+  free(str);
+  return result;
 }
 
 char* no_space(char* str) //Option w

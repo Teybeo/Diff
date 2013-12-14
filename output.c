@@ -4,9 +4,14 @@
 #include <stdio.h>
 #include <string.h>
 
-#define ADDITION 0
-#define DELETION 1
-#define MODIFICATION 2
+#define ADDITION 1
+#define DELETION 2
+#define MODIFICATION 3
+
+void print_edit(char** file_a, char** file_b, int idx_a, int idx_b, int nb_diff_a, int nb_diff_b, int edit_type);
+void print_lines(char** file, int start, int count, char symbol);
+void print_range(int start, int count);
+int get_nb_lines_until_found(char** file, char* string, int start, int size);
 
 // Rappel: Si un caractère est dans le lcs, alors il est obligatoirement présent dans la chaine de départ ET d'arrivée
 /*  Pour chaque élément du lcs et dans l'ordre
@@ -24,6 +29,7 @@ void print_diff_normal(char** file_a, int size_a, char** file_b, int size_b, cha
     int i, idx_a = 0, idx_b = 0;
     int nb_lines_different_a;
     int nb_lines_different_b;
+    int edit_type = -1;
 
     for (i = 0 ; i < size_lcs ; i++ )
     {
@@ -33,30 +39,15 @@ void print_diff_normal(char** file_a, int size_a, char** file_b, int size_b, cha
         found_in_a = !strcmp(lcs[i], file_a[idx_a]);
         found_in_b = !strcmp(lcs[i], file_b[idx_b]);
 
-        // Ligne lcs trouvée en idx_a dans A mais pas en idx_b dans B
-        // => des lignes sont présentes dans B devant la ligne lcs, (ajoutées dans B)
-        if (found_in_a && !found_in_b)
-        {
-            nb_lines_different_b = get_nb_lines_until_found(file_b, lcs[i], idx_b, size_b);
-
-            print_edit(file_a, file_b, idx_a, idx_b, 0, nb_lines_different_b, ADDITION);
-        }
-        // Ligne lcs trouvée en idx_b dans B mais pas en idx_a dans A
-        // => des lignes sont présentes dans A devant la ligne lcs, (supprimées dans B)
-        if (!found_in_a && found_in_b)
-        {
-            nb_lines_different_a = get_nb_lines_until_found(file_a, lcs[i], idx_a, size_a);
-
-            print_edit(file_a, file_b, idx_a, idx_b, nb_lines_different_a, 0, DELETION);
-        }
-        // Ligne lcs trouvée ni en idx_a dans A ni en idx_b dans B
-        // => des lignes sont présentes dans A et dans B devant la ligne lcs, (changées de A à B)
-        if (!found_in_a && !found_in_b)
+        if (!found_in_a || !found_in_b)
         {
             nb_lines_different_a = get_nb_lines_until_found(file_a, lcs[i], idx_a, size_a);
             nb_lines_different_b = get_nb_lines_until_found(file_b, lcs[i], idx_b, size_b);
 
-            print_edit(file_a, file_b, idx_a, idx_b, nb_lines_different_a, nb_lines_different_b, MODIFICATION);
+            // Un peu de magie pour déterminer le type de modif
+            edit_type = !found_in_b + !found_in_a * 2;
+
+            print_edit(file_a, file_b, idx_a, idx_b, nb_lines_different_a, nb_lines_different_b, edit_type);
         }
 
         // On passe les lignes différentes qu'on a trouvées
@@ -68,29 +59,16 @@ void print_diff_normal(char** file_a, int size_a, char** file_b, int size_b, cha
     }
 
     /* La boucle précédente s'arrête quand la dernière ligne lcs a été trouvée
-    Ici on traite donc les éventuelles modifications faites en fin de fichier, après la dèrnire ligne lcs*/
+    Ici on traite donc les éventuelles modifications faites en fin de fichier, après la dernière ligne lcs*/
 
-    // Il en reste dans A et dans B => Modifications
-    if (idx_a < size_a && idx_b < size_b)
+    if (idx_a < size_a || idx_b < size_b)
     {
         nb_lines_different_a = size_a - idx_a;
         nb_lines_different_b = size_b - idx_b;
 
-        print_edit(file_a, file_b, idx_a, idx_b, nb_lines_different_a, nb_lines_different_b, MODIFICATION);
-    }
-    // Il en reste dans A mais pas dans B => Suppressions
-    else if (idx_a < size_a && idx_b == size_b)
-    {
-        nb_lines_different_a = size_a - idx_a;
+        edit_type = (idx_b < size_b) + (idx_a < size_a) * 2;
 
-        print_edit(file_a, file_b, idx_a, idx_b, nb_lines_different_a, 0, DELETION);
-    }
-    // Il en reste dans B mais pas dans A => Additions
-    else if (idx_a == size_a && idx_b < size_b)
-    {
-        nb_lines_different_b = size_b - idx_b;
-
-        print_edit(file_a, file_b, idx_a, idx_b, 0, nb_lines_different_b, ADDITION);
+        print_edit(file_a, file_b, idx_a, idx_b, nb_lines_different_a, nb_lines_different_b, edit_type);
     }
 
 }

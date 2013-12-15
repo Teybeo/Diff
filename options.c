@@ -58,6 +58,18 @@ Options* parse_options(int argc, char** argv) {
 
             break;
 
+            case 't':
+                options->tab_to_spaces = true;
+            break;
+
+            case 'b':
+                options->one_space = true;
+            break;
+
+            case 'w':
+                options->no_space = true;
+            break;
+
             default:
 
                 printf("Erreur: [%s] is not an option\n", arg);
@@ -77,6 +89,12 @@ Options* parse_options(int argc, char** argv) {
                     options->brief = true;
                 if (strcmp(arg + 2, "--ignore-case"))
                     options->ignore_case_content = true;
+                if (strcmp(arg + 2, "--ignore-space-change"))
+                    options->one_space = true;
+                if (strcmp(arg + 2, "--expand-tabs"))
+                    options->tab_to_spaces = true;
+                if (strcmp(arg + 2, "--ignore-all-space"))
+                    options->no_space = true;
             }
             else {
 
@@ -113,6 +131,21 @@ Options* parse_options(int argc, char** argv) {
     }
 
     return options;
+}
 
+void proc_options(char** file, int s, Options* options)
+{
+    int i = 0;
 
+    for(i=0; i < s; i++)
+    {
+        if(options->tab_to_spaces)
+            file[i] = tab_to_spaces(file[i]);
+
+        if (options->one_space)
+            file[i] = one_space(file[i]);
+
+        if(options->no_space)
+            file[i] = no_space(file[i]);
+    }
 }

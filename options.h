@@ -17,10 +17,13 @@ typedef struct _Options {
     bool brief;
     bool ignore_case_content;
     int nb_context_lines;
+    bool one_space;
+    bool tab_to_spaces;
+    bool no_space;
 
 } Options;
 
 Options* parse_options(int argc, char** argv);
-
+void proc_options(char** str, int s, Options* Options);
 #endif // OPTIONS
 

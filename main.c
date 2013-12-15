@@ -79,6 +79,8 @@ int main(int argc, char** argv)
         else
             print_diff_normal(file_a, size_a, file_b, size_b, lcs, size_lcs);
     }
+    else if (options->output_mode == OUTPUT_MODE_UNIFIED)
+        print_diff_unified(file_a, size_a, file_b, size_b, lcs, size_lcs, options);
 
     return 0;
 }

@@ -35,5 +35,5 @@ int diff_strlen(const char *s)
     {
         i++;
     }
-    return count;
+    return i;
 }

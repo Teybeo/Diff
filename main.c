@@ -59,6 +59,10 @@ int main(int argc, char** argv)
     if (file_b == NULL)
         return 0;
 
+
+    proc_options(file_a, size_a, options);
+    proc_options(file_b, size_b, options);
+
     char** lcs = calloc(sizeof(char*), max(size_a, size_b) + 1);
 
     char** matrix = build_lcs_matrix(file_a, file_b, size_a, size_b);
@@ -204,4 +208,101 @@ void is_different(char** file_a, int size_a, char** file_b, int size_b)
         printf("Les fichiers sont differents\n");
 
 }
+
+char* one_space (char* str) // Option b
+{
+	//Ignoring every multiples spaces in a row and keeping only one
+	char* result = (char*)malloc((strlen(str)+1) * sizeof(*result));
+
+
+    int i;
+    int j = 0;
+    int sp = 0;
+
+    for (i=0; i < strlen(str); i++)
+    {
+        if (str[i] == ' ') //If the current character is a space...
+        {
+            if (sp == 0) //...and is not followed by another space.
+            {
+                result[j] = str[i];
+                sp = 1;
+                j++;
+            }
+        }
+
+        else //For any other character
+        {
+            result[j] = str[i];
+            sp = 0;
+            j++;
+        }
+    }
+
+    result[j] = '\0';
+    free(str);
+    return result;
+}
+
+char* tab_to_spaces (char* str) //Option t
+{
+    int i;
+	int j = 0;
+    int k = 0;
+	int l = 0;
+
+    for (i=0; i < strlen(str); i++)
+    {
+        if (str[i] == '\t')
+        {
+            k++;
+        }
+    }
+
+    char* result = (char*)malloc ((strlen(str) + 1 + 3*k) * sizeof (*result));
+
+    for (i=0; i < strlen(str); i++)
+    {
+        if (str[i] == '\t')
+	    {
+			for (l=0; l < 4; l++)
+			{
+				result[j] = ' ';
+				j++;
+			}
+        }
+
+        else
+        {
+            result[j] = str[i];
+            j++;
+        }
+    }
+
+  result[j] = '\0';
+  free(str);
+  return result;
+}
+
+char* no_space(char* str) //Option w
+{
+    char* result = (char*)malloc ((strlen(str)+1) * sizeof (*result));
+
+    int i;
+    int j = 0;
+
+    for(i = 0; i < strlen(str); i++)
+    {
+        if (str[i] != ' ' && str[i] != '\t') //Not a space or a tab
+        {
+            result[j] = str[i];
+            j++;
+        }
+    }
+
+    result[j] = '\0';
+    free(str);
+    return result;
+}
+
 

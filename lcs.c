@@ -8,7 +8,7 @@
     Alloue une matrice permettant ensuite de trouver le LCS de chaine_a et chaine_b
     Ne contient pas d'en-têtes
 */
-char** build_lcs_matrix(char** chaine_a, char** chaine_b, int size_a, int size_b) {
+char** build_lcs_matrix(char** chaine_a, char** chaine_b, int size_a, int size_b, bool ignore_case_content) {
 
     // +1 pour le caractère vide
     int size_x = size_a + 1; // Nombre de colonnes
@@ -38,11 +38,22 @@ char** build_lcs_matrix(char** chaine_a, char** chaine_b, int size_a, int size_b
     {
         for (x = 0 ; x < size_a; x++ )
         {
-            if (strcmp(chaine_a[x], chaine_b[y]) == 0)
-                matrix[y+1][x+1] = 1 + matrix[y][x];
+            if(ignore_case_content)
+            {
+                if (strcasecmp(chaine_a[x], chaine_b[y]) == 0)
+                    matrix[y+1][x+1] = 1 + matrix[y][x];
+                else
+                    matrix[y+1][x+1] = max(matrix[y][x+1], matrix[y+1][x]);
+//              display_lcs_matrix(matrix, size_a, size_b, chaine_a, chaine_b);
+            }
             else
-                matrix[y+1][x+1] = max(matrix[y][x+1], matrix[y+1][x]);
-//            display_lcs_matrix(matrix, size_a, size_b, chaine_a, chaine_b);
+            {
+                if (strcmp(chaine_a[x], chaine_b[y]) == 0)
+                    matrix[y+1][x+1] = 1 + matrix[y][x];
+                else
+                    matrix[y+1][x+1] = max(matrix[y][x+1], matrix[y+1][x]);
+//              display_lcs_matrix(matrix, size_a, size_b, chaine_a, chaine_b);
+            }
         }
     }
 
@@ -51,23 +62,39 @@ char** build_lcs_matrix(char** chaine_a, char** chaine_b, int size_a, int size_b
 /*
     Cette fonction extrait la (une) lcs des chaines a et b à partir de la matrice
 */
-void extract_lcs(char** matrix, char** a, char** b, int x, int y, char** lcs)
+void extract_lcs(char** matrix, char** a, char** b, int x, int y, char** lcs, bool ignore_case_content)
 {
     static int i = 0;
 
     if (x == 0 || y == 0)
         return;
 
-    if (strcmp(a[x - 1], b[y - 1]) == 0)
+    if(ignore_case_content)
     {
-        extract_lcs(matrix, a, b, x - 1, y - 1, lcs);
-        lcs[i] = a[x - 1];
-        i++;
+        if (strcasecmp(a[x - 1], b[y - 1]) == 0)
+        {
+            extract_lcs(matrix, a, b, x - 1, y - 1, lcs, ignore_case_content);
+            lcs[i] = a[x - 1];
+            i++;
+        }
+        else if (matrix[y][x] == matrix[y - 1][x])
+            extract_lcs(matrix, a, b, x, y - 1, lcs, ignore_case_content); // On prend le chemin du haut
+        else
+            extract_lcs(matrix, a, b, x - 1, y, lcs, ignore_case_content); // On prend le chemin de gauche
     }
-    else if (matrix[y][x] == matrix[y - 1][x])
-        extract_lcs(matrix, a, b, x, y - 1, lcs); // On prend le chemin du haut
     else
-        extract_lcs(matrix, a, b, x - 1, y, lcs); // On prend le chemin de gauche
+    {
+        if (strcmp(a[x - 1], b[y - 1]) == 0)
+        {
+            extract_lcs(matrix, a, b, x - 1, y - 1, lcs, ignore_case_content);
+            lcs[i] = a[x - 1];
+            i++;
+        }
+        else if (matrix[y][x] == matrix[y - 1][x])
+            extract_lcs(matrix, a, b, x, y - 1, lcs, ignore_case_content); // On prend le chemin du haut
+        else
+            extract_lcs(matrix, a, b, x - 1, y, lcs, ignore_case_content); // On prend le chemin de gauche
+    }
 }
 
 /*

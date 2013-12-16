@@ -65,8 +65,8 @@ int main(int argc, char** argv)
 
     char** lcs = calloc(sizeof(char*), max(size_a, size_b) + 1);
 
-    char** matrix = build_lcs_matrix(file_a, file_b, size_a, size_b);
-    extract_lcs(matrix, file_a, file_b, size_a, size_b, lcs);
+    char** matrix = build_lcs_matrix(file_a, file_b, size_a, size_b, options->ignore_case_content);
+    extract_lcs(matrix, file_a, file_b, size_a, size_b, lcs, options->ignore_case_content);
 
     putchar('\n');
 
@@ -78,10 +78,7 @@ int main(int argc, char** argv)
         is_different(file_a, size_a, file_b, size_b);
     else if (options->output_mode == OUTPUT_MODE_NORMAL)
     {
-        if (options->ignore_case_content)
-            ignore_casse(file_a, size_a, file_b, size_b, lcs, size_lcs);
-        else
-            print_diff_normal(file_a, size_a, file_b, size_b, lcs, size_lcs);
+        print_diff_normal(file_a, size_a, file_b, size_b, lcs, size_lcs, options);
     }
     else if (options->output_mode == OUTPUT_MODE_UNIFIED)
         print_diff_unified(file_a, size_a, file_b, size_b, lcs, size_lcs, options);
